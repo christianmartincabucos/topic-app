@@ -28,8 +28,7 @@ const submitTopic = () => {
         data.name = textTopic.value;
       }
     })
-    const newTopics = localStorage.setItem('topics', JSON.stringify(topics.value));
-    topics.value = newTopics;
+    localStorage.setItem('topics', JSON.stringify(topics.value));
     showModalEdit.value = false;
   }
 }
@@ -60,8 +59,7 @@ const deleteTopic = () => {
       topics.value.splice(data, 1);
     }
   })
-  const newTopics = localStorage.setItem('topics', JSON.stringify(topics.value));
-  topics.value = newTopics;
+  localStorage.setItem('topics', JSON.stringify(topics.value));
   showModalDelete.value = false;
 }
 
@@ -77,8 +75,7 @@ const addComment = (topicId) => {
         textComment.value = '';
       }
     });
-    const newTopics = localStorage.setItem('topics', JSON.stringify(topics.value));
-    topics.value = newTopics;
+    localStorage.setItem('topics', JSON.stringify(topics.value));
   }
 }
 const deleteComment = (topicId, commentIndex) => {
@@ -88,8 +85,7 @@ const deleteComment = (topicId, commentIndex) => {
         topic.comments.splice(commentIndex, 1);
       }
     });
-    const newTopics = localStorage.setItem('topics', JSON.stringify(topics.value));
-    topics.value = newTopics;
+    localStorage.setItem('topics', JSON.stringify(topics.value));
   }
 }
 </script>
