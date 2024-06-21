@@ -57,6 +57,7 @@ const topicLength = (length) => {
 
 const showTopic = (data) => {
   showModalEdit.value = true;
+  textTopic.value = '';
   console.log(data);
   if (data) {
     labelModal.value = "Edit Topic"
