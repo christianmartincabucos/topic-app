@@ -14,6 +14,7 @@ const textTopic = ref('');
 const showModalEdit = ref(false);
 const showModalDelete = ref(false);
 const topic = ref([]);
+const labelModal = ref('')
 const formatDate = (date) => {
   return new Date(date).toUTCString();
 }
@@ -42,6 +43,7 @@ const submitTopic = () => {
 
     localStorage.setItem('topics', JSON.stringify(topics.value));
     showModalEdit.value = false;
+    textTopic.value = '';
     topic.value = [];
   }
 };
@@ -55,10 +57,13 @@ const topicLength = (length) => {
 
 const showTopic = (data) => {
   showModalEdit.value = true;
-  if (data?.length) {
+  console.log(data);
+  if (data) {
+    labelModal.value = "Edit Topic"
     topic.value = data
-    textTopic.value = topic.value.name;
+    return textTopic.value = topic.value.name;
   }
+  labelModal.value = "Add Topic"
 }
 
 const closeModal = () => {
@@ -112,7 +117,7 @@ const deleteComment = (topicId, commentIndex) => {
     <h1 class="text-5xl font-medium text-gray-600">Browse Topics</h1>
     <!-- Component: Small primary basic button -->
     <div class="flex justify-end py-5">
-      <button @click="showTopic" class="inline-flex items-center justify-center h-8 gap-2 px-4 text-xs font-medium tracking-wide text-white transition duration-300 rounded-full focus-visible:outline-none whitespace-nowrap bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300 disabled:shadow-none">
+      <button @click="showTopic(null)" class="inline-flex items-center justify-center h-8 gap-2 px-4 text-xs font-medium tracking-wide text-white transition duration-300 rounded-full focus-visible:outline-none whitespace-nowrap bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300 disabled:shadow-none">
         <span>Add Topic</span>
       </button>
     </div>
@@ -183,7 +188,7 @@ const deleteComment = (topicId, commentIndex) => {
   <fwb-modal v-if="showModalEdit" @close="closeModal">
     <template #header>
       <div class="flex items-center text-lg">
-        Edit Topic
+        {{ labelModal }}
       </div>
     </template>
     <template #body>
