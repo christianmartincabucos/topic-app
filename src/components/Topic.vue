@@ -23,15 +23,29 @@ persons.value ?? localStorage.setItem('persons', JSON.stringify(persons.value));
 
 const submitTopic = () => {
   if (textTopic.value.trim() !== '') {
-    topics.value.filter(data => {
-      if (data.guid === topic.value.guid) {
-        data.name = textTopic.value;
+    const newTopic = {
+      name: textTopic.value,
+      guid: Math.random().toString(36).substr(2, 9),
+      comments: [],
+    };
+
+    if (topic.value?.length) {
+      console.log(topic.value)
+      const existingTopic = topics.value.find((data) => data.guid === topic.value.guid);
+      if (existingTopic) {
+        existingTopic.name = textTopic.value;
       }
-    })
+    } else {
+      topics.value.unshift(newTopic);
+      console.log(topics.value);
+    }
+
     localStorage.setItem('topics', JSON.stringify(topics.value));
     showModalEdit.value = false;
+    topic.value = [];
   }
-}
+};
+
 const topicLength = (length) => {
   if (length) {
     return `${length} ${length > 1 ? ' comments':' comment'}`;
@@ -39,10 +53,12 @@ const topicLength = (length) => {
   return 'comment';
 }
 
-const editTopic = (data) => {
+const showTopic = (data) => {
   showModalEdit.value = true;
-  topic.value = data
-  textTopic.value = topic.value.name;
+  if (data?.length) {
+    topic.value = data
+    textTopic.value = topic.value.name;
+  }
 }
 
 const closeModal = () => {
@@ -94,6 +110,13 @@ const deleteComment = (topicId, commentIndex) => {
 
   <div class="max-w-5xl px-4 pb-5 sm:px-6 lg:mx-auto py-10">
     <h1 class="text-5xl font-medium text-gray-600">Browse Topics</h1>
+    <!-- Component: Small primary basic button -->
+    <div class="flex justify-end py-5">
+      <button @click="showTopic" class="inline-flex items-center justify-center h-8 gap-2 px-4 text-xs font-medium tracking-wide text-white transition duration-300 rounded-full focus-visible:outline-none whitespace-nowrap bg-gray-500 hover:bg-gray-600 focus:bg-gray-700 disabled:cursor-not-allowed disabled:border-gray-300 disabled:bg-gray-300 disabled:shadow-none">
+        <span>Add Topic</span>
+      </button>
+    </div>
+    <!-- End Small primary basic button -->
     <div class="mt-3 overflow-hidden bg-white rounded-xl transition duration-300 shadow-md text-slate-500 shadow-slate-200"
       v-for="(topic, index) in topics" :key="topic.guid+index">
       <div class="p-6">
@@ -110,7 +133,7 @@ const deleteComment = (topicId, commentIndex) => {
               </button>
             </template>
             <template #content>
-              <button class="text-xs hover:text-blue-500" type="button" @click.prevent="editTopic(topic)">
+              <button class="text-xs hover:text-blue-500" type="button" @click.prevent="showTopic(topic)">
                 Edit
               </button><br>
               <button class="text-xs hover:text-blue-500" type="button" @click.prevent="showDelete(topic)">
@@ -124,7 +147,7 @@ const deleteComment = (topicId, commentIndex) => {
       <section class="w-full bg-white divide-y rounded shadow-md divide-slate-200 shadow-slate-200">
         <details class="p-4 group">
           <summary class="[&::-webkit-details-marker]:hidden relative pr-8 font-medium list-none cursor-pointer text-slate-700 focus-visible:outline-none transition-colors duration-300 group-hover:text-slate-900 ">
-            <span class="text-gray-500">{{ topicLength(topic.comments.length) }}</span>
+            <span class="text-gray-500">{{ topicLength(topic.comments?.length) }}</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-6 h-6 transition duration-300 top-1 stroke-slate-700 shrink-0 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-labelledby="title-ac13 desc-ac13">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 5 5 1 1 5"/>
             </svg>
